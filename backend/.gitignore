@@ -1,0 +1,29 @@
+# Node modules
+node_modules/
+
+# Environment variables (VERY IMPORTANT)
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build / temp
+dist/
+build/
+.tmp/
+
+# Coverage
+coverage/
+
+# Sequelize / DB files (if any local)
+*.sqlite
+
+# IDE files
+.vscode/
+.idea/

@@ -1,0 +1,19 @@
+# Global ignores
+frontend/node_modules/
+backend/node_modules/
+.env
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# GitHub / system
+*.pid
+*.seed
+
+# Ignore nested env files too
+backend/.env
+frontend/.env.local
