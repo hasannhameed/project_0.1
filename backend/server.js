@@ -25,10 +25,10 @@ app.get('/api/test2', async (req, res) => {
     res.json({ "test": "Hello from the backend" });
 });
 
-// app.post('/api/users', async (req, res) => {
-//     const user = await User.create(req.body);
-//     res.json(user);
-// });
+app.post('/api/users', async (req, res) => {
+    const user = await User.create(req.body);
+    res.json(user);
+});
 
 app.get('/api/users', async (req, res) => {
     const users = await User.findAll();
