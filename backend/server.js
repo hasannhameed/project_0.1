@@ -30,10 +30,10 @@ app.get('/api/test2', async (req, res) => {
 //     res.json(user);
 // });
 
-// app.get('/api/users', async (req, res) => {
-//     const users = await User.findAll();
-//     res.json(users);
-// });
+app.get('/api/users', async (req, res) => {
+    const users = await User.findAll();
+    res.json(users);
+});
 
 // app.put('/api/users/:id', async (req, res) => {
 //     const { id } = req.params;
