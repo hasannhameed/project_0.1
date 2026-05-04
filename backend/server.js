@@ -21,6 +21,10 @@ app.get('/api/test', async (req, res) => {
     res.json({ "test": "Hello from the backend" });
 });
 
+app.get('/api/test2', async (req, res) => {
+    res.json({ "test": "Hello from the backend" });
+});
+
 // app.post('/api/users', async (req, res) => {
 //     const user = await User.create(req.body);
 //     res.json(user);
