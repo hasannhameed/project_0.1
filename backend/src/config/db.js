@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
-const sequelize = new Sequelize("postgresql://postgres:Qwerty%409949719006@db.jbaveqntjbjllwaylzgw.supabase.co:5432/postgres"L, {
+const sequelize = new Sequelize("postgresql://postgres:Qwerty%409949719006@db.jbaveqntjbjllwaylzgw.supabase.co:5432/postgres", {
     dialect: "postgres",
     protocol: "postgres",
     dialectOptions: {
