@@ -35,39 +35,40 @@ app.get('/api/users', async (req, res) => {
     res.json(users);
 });
 
-// app.put('/api/users/:id', async (req, res) => {
-//     const { id } = req.params;
+app.put('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
 
-//     await User.update(req.body, {
-//         where: { id },
-//     });
+    await User.update(req.body, {
+        where: { id },
+    });
 
-//     const updated = await User.findByPk(id);
-//     res.json(updated);
-// });
-
-// app.delete('/api/users/:id', async (req, res) => {
-//     const { id } = req.params;
-
-//     await User.destroy({
-//         where: { id },
-//     });
-
-//     res.json({ message: 'Deleted' });
-// });
-
-
-// sequelize.sync()
-//     .then(() => {
-//         console.log('✅ DB connected, running server on 5000'),
-
-//     })
-//     .catch(err => console.error(err));
-
-
-
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    const updated = await User.findByPk(id);
+    res.json(updated);
 });
+
+app.delete('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    await User.destroy({
+        where: { id },
+    });
+
+    res.json({ message: 'Deleted' });
+});
+
+
+sequelize.sync()
+    .then(() => {
+        console.log('✅ DB connected, running server on 5000'),
+            app.listen(PORT, () => {
+                console.log(`🚀 Server running on http://localhost:${PORT}`);
+            });
+
+    })
+    .catch(err => console.error(err));
+
+
+
+
 
 
