@@ -52,7 +52,7 @@ export default function UsersPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-black text-slate-100">
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[420px] bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.18),transparent_60%)]" />
 
       <div className="relative mx-auto max-w-5xl px-6 py-12">
