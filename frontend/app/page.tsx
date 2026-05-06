@@ -67,8 +67,7 @@ const GALLERY_IMAGES = [
 export default function Home() {
   return (
     <main className="relative bg-[#020203] text-white overflow-hidden">
-      {/* REQUIRED FOR TENOR GIF EMBED */}
-      <Script type="text/javascript" src="https://tenor.com/embed.js" strategy="afterInteractive" />
+
 
       {/* --- HERO SECTION --- */}
       <section className="relative min-h-screen flex flex-col justify-center overflow-hidden border-b border-white/5 bg-black">
@@ -77,18 +76,15 @@ export default function Home() {
           V-A-C-A (Background Video Container & Effects)
         */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          {/* 1. The GIF Embed scaled to fit as background */}
-          <div className="absolute top-1/2 left-1/2 w-auto min-w-full h-auto min-h-full -translate-x-1/2 -translate-y-1/2 scale-[1.1] opacity-60">
-            {/* Aspect ratio container ensures it covers area */}
-            <div className="aspect-[1.77778] w-full h-full tenor-gif-embed"
-              data-postid="27138822"
-              data-share-method="host"
-              data-aspect-ratio="1.77778"
-              data-width="100%"
-            >
-              <a href="https://tenor.com/view/eyso-samet-gif-27138822">Eyso Samet GIF</a>
-            </div>
-          </div>
+          {/* 1. The HTML5 Video Background */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover opacity-60 scale-[1.1]"
+            src="/hero-video.mp4"
+          />
 
           {/* 2. Effect: Color Grade Tint & Blur (Blends GIF into site palette) */}
           <div className="absolute inset-0 bg-[#020203]/40 backdrop-blur-[2px]" />
