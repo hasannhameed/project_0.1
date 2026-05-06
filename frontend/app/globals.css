@@ -1,19 +1,360 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --foreground: #ededed;
+  /* Weathering with You Theme Palette */
+  /* Gloomy rain and deep Tokyo night */
+  --background: #081021; 
+  /* Soft, misty cloud white */
+  --foreground: #f0f9ff; 
+
+  /* --- Primary Accents (The clearing sky & sunlight) --- */
+  /* Vibrant, clear sunny sky blue */
+  --clear-sky: #38bdf8; 
+  /* Blinding, warm sunlight through clouds */
+  --sunlight: #fffdba; 
+  /* Soft light refraction/sunset tone */
+  --droplet-pink: #fdf2f8; 
+  
+  /* --- Atmospheric Colors --- */
+  /* Warm sunset edge / Hina's power glow */
+  --sunset-warmth: #f97316; 
+  /* Deep, wet Tokyo cityscape blue */
+  --tokyo-deep: #1e3a8a; 
+  /* Overcast, oppressive rain cloud gray */
+  --rain-cloud: #64748b; 
+  /* Lighter atmospheric mist blue */
+  --mist: #94a3b8; 
+  /* Pale, watery blue */
+  --water: #bae6fd; 
+
+  /* Mapping old names to new palette for compatibility, 
+     but updating values to match Tenki no Ko vibe */
+  --sakura: var(--droplet-pink);
+  --sakura-soft: var(--water);
+  --sunset: var(--sunset-warmth);
+  --peach: var(--sunlight);
+  --sky: var(--clear-sky);
+  --twilight: var(--tokyo-deep);
+  --lantern: var(--sunset-warmth); /* Changed from red to warm orange */
+  --cream: var(--foreground);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Semantic palette based on the movie */
+  --color-clear-sky: var(--clear-sky);
+  --color-sunlight: var(--sunlight);
+  --color-droplet-pink: var(--droplet-pink);
+  --color-sunset-warmth: var(--sunset-warmth);
+  --color-tokyo-deep: var(--tokyo-deep);
+  --color-rain-cloud: var(--rain-cloud);
+  --color-mist: var(--mist);
+  --color-water: var(--water);
+
+  /* Legacy mapping kept for utility usage, with updated values */
+  --color-sakura: var(--sakura);
+  --color-sakura-soft: var(--sakura-soft);
+  --color-sunset: var(--sunset);
+  --color-peach: var(--peach);
+  --color-sky: var(--sky);
+  --color-twilight: var(--twilight);
+  --color-lantern: var(--lantern);
+  --color-cream: var(--cream);
+
+  --font-sans: var(--font-inter);
+  /* Keeping font definition, but name implies display style needed */
+  --font-display: var(--font-mochiy); 
+
+  /* Animations adapted for atmospheric, watery, and light effects */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 10s ease-in-out infinite;
+  --animate-gradient: gradient-shift 10s ease infinite;
+  --animate-shimmer: shimmer 3s linear infinite; /* Slower, like light on water */
+  --animate-glow: glow 3s ease-in-out infinite; /* Sun breaching clouds glow */
+  --animate-sparkle: sparkle 2.4s ease-in-out infinite; /* Raindrop catch light */
+  --animate-blob: blob 20s ease-in-out infinite; /* Slow shifting clouds */
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-rise: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 1s ease-out both;
+  --animate-spin-slow: spin 20s linear infinite;
+  --animate-bob: bob 5s ease-in-out infinite; /* Gentle floating, like clouds or bubbles */
+  --animate-pulse-ring: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg); /* Reduced motion for gentler feel */
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-12deg);
+  }
+}
+
+@keyframes glow {
+  /* Colors updated to clear sky blue and sunlight yellow */
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3), 0 0 40px rgba(255, 253, 186, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.6), 0 0 60px rgba(255, 253, 186, 0.4);
+  }
+}
+
+@keyframes sparkle {
+  /* Adapted to look more like light catching water droplets */
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes blob {
+  /* Adjusted for slower, cloud-like morphing */
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: translate(15px, -15px) scale(1.03);
+  }
+  66% {
+    border-radius: 50% 50% 40% 60% / 70% 40% 60% 30%;
+    transform: translate(-15px, 15px) scale(0.97);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* Gentle vertical motion only */
+  }
+}
+
+@keyframes pulse-ring {
+  /* Updated to Clear Sky blue */
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6);
+  }
+  80%, 100% {
+    box-shadow: 0 0 0 16px rgba(56, 189, 248, 0);
+  }
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Atmospheric Background Gradient - Shifted to blues and grey-blues */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.2), transparent 45%), /* Clear sky burst */
+    radial-gradient(circle at 85% 30%, rgba(255, 253, 186, 0.15), transparent 40%), /* Sunlight glint */
+    radial-gradient(circle at 50% 80%, rgba(30, 58, 138, 0.25), transparent 50%), /* Deep Tokyo night */
+    radial-gradient(circle at 10% 75%, rgba(100, 116, 139, 0.2), transparent 40%); /* Rain cloud gloom */
+  background-size: 200% 200%;
+  animation: gradient-shift 25s ease infinite;
+  pointer-events: none;
+}
+
+/* Rain Overlay effect using linear gradients to simulate droplets */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  /* Simulating slanted rain */
+  background-image: 
+    linear-gradient(105deg, transparent 40%, rgba(186, 230, 253, 0.04) 41%, transparent 42%),
+    linear-gradient(105deg, transparent 60%, rgba(186, 230, 253, 0.03) 61%, transparent 62%);
+  background-size: 60px 120px;
+  /* Mask keeps central area clearer, focusing rain to edges */
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Scrollbar styling - Water/Sky gradient */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+  /* Sky blue to light water blue */
+  background: linear-gradient(180deg, var(--clear-sky), var(--water));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  /* Swaps to focus on warm sunlight/power tone on hover */
+  background: linear-gradient(180deg, var(--water), var(--sunset-warmth));
+}
+
+::selection {
+  /* Pale blue selection with dark text for contrast */
+  background: rgba(186, 230, 253, 0.5);
+  color: var(--background);
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+}
+
+/* Light/Sunlight text glow */
+.text-glow {
+  text-shadow: 0 0 15px rgba(255, 253, 186, 0.6), 0 0 30px rgba(56, 189, 248, 0.4);
+}
+
+/* Gradient Text representing clearing sky (Sunset warmth -> Sunlight -> Clear Sky -> Water) */
+.gradient-text {
+  background: linear-gradient(90deg, var(--sunset-warmth), var(--sunlight), var(--clear-sky), var(--water), var(--sunset-warmth));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 10s ease infinite;
+}
+
+/* "Misty" Glass morphism */
+.glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Darker "Deep Water" Glass morphism */
+.glass-strong {
+  /* Based on deep Tokyo background */
+  background: linear-gradient(135deg, rgba(8, 16, 33, 0.8), rgba(8, 16, 33, 0.6));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.shimmer-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Sunlight glimmer effect */
+.shimmer-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  /* Bright yellow shimmer */
+  background: linear-gradient(90deg, transparent, rgba(255, 253, 186, 0.25), transparent);
+  animation: shimmer 3s linear infinite;
+}
+
+.hover-underline {
+  position: relative;
+}
+
+/* Underline representing Hina's power trail (Sunset -> Sky) */
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--sunset-warmth), var(--clear-sky));
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hover-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

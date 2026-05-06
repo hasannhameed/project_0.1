@@ -42,6 +42,7 @@ app.put('/api/users/:id', async (req, res) => {
         where: { id },
     });
 
+
     const updated = await User.findByPk(id);
     res.json(updated);
 });
