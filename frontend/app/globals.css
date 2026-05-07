@@ -201,6 +201,10 @@ body {
   height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -347,6 +351,25 @@ body::after {
 .hover-underline:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+/* --- Jack 3D Creator portfolio styles --- */
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.bg-jack,
+.bg-jack body,
+.bg-jack #__next {
+  background: #0C0C0C;
+}
+
+.font-kanit {
+  font-family: var(--font-kanit), sans-serif;
 }
 
 @media (prefers-reduced-motion: reduce) {

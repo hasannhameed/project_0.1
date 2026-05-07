@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Mochiy_Pop_One } from "next/font/google";
+import { Inter, Mochiy_Pop_One, Kanit } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Chrome from "@/components/Chrome";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -15,9 +16,15 @@ const mochiy = Mochiy_Pop_One({
   subsets: ["latin"],
 });
 
+const kanit = Kanit({
+  variable: "--font-kanit",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Hanabi · 花火",
-  description: "A modern anime + Japanese summer festival platform.",
+  title: "Jack -- 3D Creator",
+  description: "Jack -- a 3D creator driven by crafting striking and unforgettable projects.",
 };
 
 export default function RootLayout({
@@ -28,12 +35,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${mochiy.variable} h-full antialiased`}
+      className={`${inter.variable} ${mochiy.variable} ${kanit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
+        <Chrome navbar={<Navbar />} footer={<Footer />}>
+          {children}
+        </Chrome>
       </body>
     </html>
   );
