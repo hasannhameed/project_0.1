@@ -2,27 +2,27 @@ import Link from "next/link";
 
 const STORY = [
     {
-        kanji: "始",
+        glyph: "01",
         title: "Born from a midsummer night",
-        jp: "夏の夜から生まれた",
+        eyebrow: "Origin",
         body:
             "Hanabi started as a side project on a humid Tokyo evening — three friends, one ramen shop, and a shared obsession with anime, neon, and the way the city sounds at 2am. We wanted a place that captured that exact feeling.",
         from: "from-sakura",
         to: "to-twilight",
     },
     {
-        kanji: "造",
+        glyph: "02",
         title: "Built for the new wave",
-        jp: "新世代のために",
+        eyebrow: "Design",
         body:
             "Most anime platforms feel like they were designed for 2008. We're building Hanabi the way Gen Z actually browses — bright, fast, mobile-first, and unapologetically personal. No infinite walls of grey thumbnails.",
         from: "from-sky",
         to: "to-sunset",
     },
     {
-        kanji: "祭",
+        glyph: "03",
         title: "More than a streamer",
-        jp: "配信だけじゃない",
+        eyebrow: "Culture",
         body:
             "Watch parties, character spotlights, drop-day countdowns, fan zines — Hanabi is part library, part festival, part group chat. If it's anime culture, it lives here.",
         from: "from-twilight",
@@ -31,10 +31,10 @@ const STORY = [
 ];
 
 const STATS = [
-    { value: "2,400+", label: "titles · 作品" },
-    { value: "180", label: "studios · スタジオ" },
-    { value: "1.2M", label: "fans · ファン" },
-    { value: "24/7", label: "matsuri · 祭" },
+    { value: "2,400+", label: "titles" },
+    { value: "180", label: "studios" },
+    { value: "1.2M", label: "fans" },
+    { value: "24/7", label: "community" },
 ];
 
 export default function About() {
@@ -44,7 +44,7 @@ export default function About() {
                 <div aria-hidden className="pointer-events-none absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 animate-blob bg-sakura/30 blur-3xl" />
                 <div className="mx-auto max-w-4xl text-center">
                     <span className="inline-block animate-rise text-xs font-bold uppercase tracking-[0.3em] text-sakura">
-                        私たちについて · our story
+                        our story
                     </span>
                     <h1 className="mt-4 animate-rise font-display text-5xl leading-tight tracking-tight sm:text-7xl [animation-delay:0.1s]">
                         <span className="gradient-text">a love letter</span>
@@ -52,9 +52,9 @@ export default function About() {
                         <span className="text-white">to anime, summer, and you.</span>
                     </h1>
                     <p className="mx-auto mt-6 max-w-2xl animate-rise text-balance text-base text-white/70 sm:text-lg [animation-delay:0.2s]">
-                        Hanabi (花火) means fireworks. We picked the name because that's
-                        what good anime feels like — quick, loud, beautiful, and a little
-                        heartbreaking when it ends.
+                        Hanabi means fireworks — and that's exactly what good anime feels
+                        like. Quick, loud, beautiful, and a little heartbreaking when it
+                        ends.
                     </p>
                 </div>
             </section>
@@ -65,7 +65,7 @@ export default function About() {
                         const flip = i % 2 === 1;
                         return (
                             <article
-                                key={chapter.kanji}
+                                key={chapter.glyph}
                                 className={`grid items-center gap-8 md:grid-cols-2 ${flip ? "md:[&>*:first-child]:order-2" : ""
                                     }`}
                             >
@@ -74,8 +74,8 @@ export default function About() {
                                         className={`absolute inset-0 bg-gradient-to-br ${chapter.from} ${chapter.to} transition duration-700 group-hover:scale-110`}
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                                    <span className="absolute inset-0 flex items-center justify-center font-display text-[14rem] leading-none text-white/15 transition duration-700 group-hover:scale-110 group-hover:text-white/30">
-                                        {chapter.kanji}
+                                    <span className="absolute inset-0 flex items-center justify-center font-display text-[12rem] leading-none text-white/15 transition duration-700 group-hover:scale-110 group-hover:text-white/30">
+                                        {chapter.glyph}
                                     </span>
                                     <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-xs font-bold text-white backdrop-blur">
                                         chapter {String(i + 1).padStart(2, "0")}
@@ -84,7 +84,7 @@ export default function About() {
 
                                 <div>
                                     <span className="font-display text-sm uppercase tracking-[0.25em] text-sakura-soft">
-                                        {chapter.jp}
+                                        {chapter.eyebrow}
                                     </span>
                                     <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
                                         {chapter.title}

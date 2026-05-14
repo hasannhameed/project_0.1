@@ -1,11 +1,12 @@
-import HeroSection from "@/components/jack/HeroSection";
-import MarqueeSection from "@/components/jack/MarqueeSection";
-import AboutSection from "@/components/jack/AboutSection";
-import ServicesSection from "@/components/jack/ServicesSection";
-import SkillsSection from "@/components/jack/SkillsSection";
-import ProjectsSection from "@/components/jack/ProjectsSection";
-import PricingSection from "@/components/jack/PricingSection";
-import ContactSection from "@/components/jack/ContactSection";
+import HeroSection from "@/components/hasan/HeroSection";
+import MarqueeSection from "@/components/hasan/MarqueeSection";
+import AboutSection from "@/components/hasan/AboutSection";
+import ServicesSection from "@/components/hasan/ServicesSection";
+import SkillsSection from "@/components/hasan/SkillsSection";
+import ProjectsSection from "@/components/hasan/ProjectsSection";
+import PricingSection from "@/components/hasan/PricingSection";
+import ContactSection from "@/components/hasan/ContactSection";
+import Footer from "@/components/hasan/Footer";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
       <PricingSection />
       <ProjectsSection />
       <ContactSection />
+      <Footer />
     </main>
   );
 }

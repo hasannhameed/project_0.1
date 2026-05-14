@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const LINKS = [
-    { href: "/", label: "Home", jp: "ホーム" },
-    { href: "/about", label: "About", jp: "概要" },
-    { href: "/anime", label: "Anime", jp: "アニメ" },
-    { href: "/characters", label: "Characters", jp: "キャラ" },
-    { href: "/contact", label: "Contact", jp: "連絡" },
+    { href: "/home", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/anime", label: "Anime" },
+    { href: "/characters", label: "Characters" },
+    { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {
@@ -43,12 +43,12 @@ export default function Navbar() {
 
             <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
                 <Link
-                    href="/"
+                    href="/home"
                     className="group flex items-center gap-2.5"
                     aria-label="Hanabi home"
                 >
                     <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sakura via-twilight to-sky text-lg font-black text-white shadow-lg shadow-sakura/40 transition group-hover:scale-110 group-hover:rotate-6">
-                        花
+                        H
                         <span className="absolute -inset-1 -z-10 rounded-xl bg-gradient-to-br from-sakura via-twilight to-sky opacity-0 blur-md transition group-hover:opacity-70" />
                     </span>
                     <div className="flex flex-col leading-none">
@@ -56,7 +56,7 @@ export default function Navbar() {
                             Hanabi
                         </span>
                         <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-sakura-soft/70">
-                            花火 · matsuri
+                            anime · culture
                         </span>
                     </div>
                 </Link>
@@ -76,9 +76,6 @@ export default function Navbar() {
                                         <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-sakura/20 via-twilight/20 to-sky/20 ring-1 ring-white/15" />
                                     )}
                                     <span className="hover-underline">{link.label}</span>
-                                    <span className="hidden text-[10px] font-medium text-sakura-soft/60 lg:inline">
-                                        {link.jp}
-                                    </span>
                                 </Link>
                             </li>
                         );
@@ -86,10 +83,10 @@ export default function Navbar() {
                 </ul>
 
                 <Link
-                    href="/contact"
+                    href="/join"
                     className="group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-sakura via-twilight to-sky px-5 py-2 text-sm font-bold text-white shadow-lg shadow-sakura/30 transition hover:scale-105 hover:shadow-sakura/50 active:scale-95 md:inline-flex"
                 >
-                    <span className="relative z-10">Join the matsuri →</span>
+                    <span className="relative z-10">Join Hanabi →</span>
                     <span className="shimmer-overlay" />
                 </Link>
 
@@ -132,17 +129,16 @@ export default function Navbar() {
                                         }`}
                                 >
                                     <span>{link.label}</span>
-                                    <span className="text-xs text-sakura-soft/60">{link.jp}</span>
                                 </Link>
                             </li>
                         );
                     })}
                     <li className="pt-1">
                         <Link
-                            href="/contact"
+                            href="/join"
                             className="flex items-center justify-center rounded-xl bg-gradient-to-r from-sakura via-twilight to-sky px-4 py-3 text-sm font-bold text-white shadow-lg shadow-sakura/30"
                         >
-                            Join the matsuri →
+                            Join Hanabi →
                         </Link>
                     </li>
                 </ul>

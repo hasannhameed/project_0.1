@@ -8,7 +8,7 @@ const SOCIALS = [
 ];
 
 const LINKS = [
-    { href: "/", label: "Home" },
+    { href: "/home", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/anime", label: "Anime" },
     { href: "/characters", label: "Characters" },
@@ -26,11 +26,11 @@ export default function Footer() {
 
                     {/* Brand Section */}
                     <div className="flex flex-col">
-                        <Link href="/" className="group inline-flex items-center gap-3 w-max">
+                        <Link href="/home" className="group inline-flex items-center gap-3 w-max">
                             <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-black/80 border border-white/10 overflow-hidden shadow-xl shadow-sakura/10 transition-all duration-500 group-hover:scale-105 group-hover:border-sakura/50">
                                 <div className="absolute inset-0 bg-gradient-to-br from-sakura/30 via-twilight/30 to-sky/30 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                                 <span className="relative z-10 text-xl font-black bg-gradient-to-br from-sakura via-white to-sky bg-clip-text text-transparent transition-transform duration-500 group-hover:scale-110">
-                                    花
+                                    H
                                 </span>
                             </div>
                             <div className="flex flex-col leading-tight">
@@ -38,7 +38,7 @@ export default function Footer() {
                                     Hanabi
                                 </span>
                                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/50 transition-colors duration-300 group-hover:text-sky/80">
-                                    花火 · matsuri
+                                    anime · culture
                                 </span>
                             </div>
                         </Link>
@@ -59,7 +59,7 @@ export default function Footer() {
                     {/* Explore Links */}
                     <div className="flex flex-col">
                         <h4 className="mb-6 font-display text-sm font-bold tracking-widest text-white">
-                            Explore <span className="text-sakura/60 font-sans font-normal text-xs ml-1">探索</span>
+                            Explore
                         </h4>
                         <ul className="flex flex-col gap-3">
                             {LINKS.map((link) => (
@@ -79,7 +79,7 @@ export default function Footer() {
                     {/* Follow Links */}
                     <div className="flex flex-col">
                         <h4 className="mb-6 font-display text-sm font-bold tracking-widest text-white">
-                            Follow <span className="text-sky/60 font-sans font-normal text-xs ml-1">フォロー</span>
+                            Follow
                         </h4>
                         <ul className="flex flex-col gap-3">
                             {SOCIALS.map((s) => (
@@ -104,7 +104,7 @@ export default function Footer() {
                     {/* Newsletter Subscription */}
                     <div className="flex flex-col">
                         <h4 className="mb-6 font-display text-sm font-bold tracking-widest text-white">
-                            Stay Updated <span className="text-peach/60 font-sans font-normal text-xs ml-1">最新情報</span>
+                            Stay Updated
                         </h4>
                         <p className="mb-4 text-xs leading-relaxed text-white/50">
                             Get the latest drops, festival news, and exclusive invites directly to your inbox. No spam, just vibes.
@@ -132,9 +132,9 @@ export default function Footer() {
                         © {new Date().getFullYear()} Hanabi Platform. All rights reserved.
                     </p>
                     <p className="font-display tracking-[0.2em] text-[10px] text-white/30 uppercase flex items-center gap-2">
-                        <span>また会いましょう</span>
-                        <span className="h-1 w-1 rounded-full bg-sakura/50"></span>
                         <span>See you again</span>
+                        <span className="h-1 w-1 rounded-full bg-sakura/50"></span>
+                        <span>Made with love</span>
                     </p>
                 </div>
             </div>
