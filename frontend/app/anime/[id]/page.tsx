@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import HeroTrailer from "@/components/HeroTrailer";
+import TrailerLauncher from "@/components/TrailerLauncher";
 import {
     getAnimeByMalId,
     stripHtml,
@@ -52,7 +52,6 @@ export default async function AnimeDetail({
             {/* Banner hero */}
             <section className="relative">
                 <div className="relative h-[55vh] min-h-[420px] w-full overflow-hidden">
-                    {/* Poster fallback — shown before iframe loads, and forever if no trailer */}
                     {anime.bannerImage ? (
                         <Image
                             src={anime.bannerImage}
@@ -71,10 +70,7 @@ export default async function AnimeDetail({
                         />
                     )}
 
-                    {/* Netflix-style autoplay trailer behind the gradient overlays */}
-                    {trailerVideoId && <HeroTrailer videoId={trailerVideoId} title={title} />}
-
-                    {/* Readability overlays — placed ABOVE the video so title block stays legible */}
+                    {/* Readability overlays — keep the title block legible */}
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/40" />
                 </div>
@@ -151,12 +147,14 @@ export default async function AnimeDetail({
                             </div>
 
                             <div className="mt-6 flex animate-rise flex-wrap items-center gap-3 [animation-delay:0.3s]">
+                                {trailerVideoId && (
+                                    <TrailerLauncher videoId={trailerVideoId} title={title} />
+                                )}
                                 <Link
                                     href="/anime"
-                                    className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-sakura via-twilight to-sky px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-sakura/30 transition hover:scale-105"
+                                    className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:border-sakura/40 hover:bg-white/10"
                                 >
-                                    <span>← Back to catalog</span>
-                                    <span className="shimmer-overlay" />
+                                    ← Back to catalog
                                 </Link>
                                 {anime.externalLinks.slice(0, 4).map((link) => (
                                     <a

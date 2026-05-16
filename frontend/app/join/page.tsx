@@ -283,7 +283,7 @@ export default function Join() {
                             <span className="transition group-hover:translate-x-1">→</span>
                         </Link>
                         <Link
-                            href="/home"
+                            href="/"
                             className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:border-white/40 hover:bg-white/10"
                         >
                             Back to home

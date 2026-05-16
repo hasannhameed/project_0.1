@@ -12,13 +12,13 @@ export default function Chrome({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
-    const isJackHome = pathname === "/";
+    const isPortfolio = pathname === "/hasan" || pathname?.startsWith("/hasan/");
 
     return (
         <>
-            {!isJackHome && navbar}
+            {!isPortfolio && navbar}
             <div className="flex-1">{children}</div>
-            {!isJackHome && footer}
+            {!isPortfolio && footer}
         </>
     );
 }

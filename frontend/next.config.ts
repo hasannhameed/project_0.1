@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "img.anili.st" },
     ],
   },
+  async redirects() {
+    return [
+      // Old anime homepage path → now lives at root
+      { source: "/home", destination: "/", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

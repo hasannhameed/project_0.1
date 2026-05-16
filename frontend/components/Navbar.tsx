@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const LINKS = [
-    { href: "/home", label: "Home" },
-    { href: "/about", label: "About" },
+    { href: "/", label: "Home" },
     { href: "/anime", label: "Anime" },
-    { href: "/characters", label: "Characters" },
+    { href: "/products", label: "Products" },
     { href: "/contact", label: "Contact" },
+    { href: "/about", label: "About" },
 ];
 
 export default function Navbar() {
@@ -43,7 +43,7 @@ export default function Navbar() {
 
             <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
                 <Link
-                    href="/home"
+                    href="/"
                     className="group flex items-center gap-2.5"
                     aria-label="Hanabi home"
                 >

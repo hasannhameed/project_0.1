@@ -23,8 +23,8 @@ const kanit = Kanit({
 });
 
 export const metadata: Metadata = {
-  title: "Jack -- 3D Creator",
-  description: "Jack -- a 3D creator driven by crafting striking and unforgettable projects.",
+  title: "Hanabi — Anime, curated by humans",
+  description: "Top-rated titles, character deep dives, live trailers, and a community of anime fans who take it seriously.",
 };
 
 export default function RootLayout({
