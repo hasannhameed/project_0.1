@@ -3,8 +3,18 @@ const User = require('../models/user.model');
 const { signToken, COOKIE_NAME, COOKIE_OPTIONS } = require('../utils/token');
 
 function publicUser(u) {
-    return { id: u.id, name: u.name, email: u.email, createdAt: u.createdAt };
+    return {
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        bio: u.bio ?? null,
+        avatar: u.avatar ?? null,
+        createdAt: u.createdAt,
+    };
 }
+
+// 2MB raw file → ~2.67MB base64. Allow a little headroom for the data: prefix.
+const MAX_AVATAR_LENGTH = 3 * 1024 * 1024; // ~3MB of base64 chars
 
 async function signup(req, res) {
     try {
@@ -70,7 +80,7 @@ async function login(req, res) {
     }
 }
 
-async function logout(req, res) {
+async function logout(_req, res) {
     res.clearCookie(COOKIE_NAME, { ...COOKIE_OPTIONS, maxAge: undefined });
     return res.json({ ok: true });
 }
@@ -79,4 +89,53 @@ async function me(req, res) {
     return res.json({ user: publicUser(req.user) });
 }
 
-module.exports = { signup, login, logout, me };
+async function updateMe(req, res) {
+    try {
+        const { name, bio, avatar } = req.body ?? {};
+        const updates = {};
+
+        if (name !== undefined) {
+            if (typeof name !== 'string' || !name.trim()) {
+                return res.status(400).json({ error: 'Name cannot be empty' });
+            }
+            updates.name = name.trim();
+        }
+
+        if (bio !== undefined) {
+            if (bio !== null && typeof bio !== 'string') {
+                return res.status(400).json({ error: 'Bio must be a string' });
+            }
+            if (typeof bio === 'string' && bio.length > 280) {
+                return res.status(400).json({ error: 'Bio must be 280 chars or less' });
+            }
+            updates.bio = bio === '' ? null : bio;
+        }
+
+        if (avatar !== undefined) {
+            if (avatar !== null) {
+                if (typeof avatar !== 'string') {
+                    return res.status(400).json({ error: 'Avatar must be a data URL' });
+                }
+                if (!avatar.startsWith('data:image/')) {
+                    return res.status(400).json({ error: 'Avatar must be a data:image/... URL' });
+                }
+                if (avatar.length > MAX_AVATAR_LENGTH) {
+                    return res.status(413).json({ error: 'Avatar exceeds 2MB. Please use a smaller image.' });
+                }
+            }
+            updates.avatar = avatar;
+        }
+
+        await req.user.update(updates);
+        await req.user.reload();
+        return res.json({ user: publicUser(req.user) });
+    } catch (err) {
+        if (err?.name === 'SequelizeValidationError') {
+            return res.status(400).json({ error: err.errors?.[0]?.message ?? 'Invalid input' });
+        }
+        console.error('updateMe error', err);
+        return res.status(500).json({ error: 'Something went wrong' });
+    }
+}
+
+module.exports = { signup, login, logout, me, updateMe };
