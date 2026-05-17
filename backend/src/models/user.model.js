@@ -9,10 +9,32 @@ const User = sequelize.define('User', {
     },
     name: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: { msg: 'Name is required' },
+            len: { args: [1, 60], msg: 'Name must be 1–60 characters' },
+        },
     },
     email: {
         type: DataTypes.STRING,
         unique: true,
+        allowNull: false,
+        validate: {
+            isEmail: { msg: 'Must be a valid email' },
+        },
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+}, {
+    // Never return password in default queries
+    defaultScope: {
+        attributes: { exclude: ['password'] },
+    },
+    scopes: {
+        // Use User.scope('withPassword').findOne(...) when you need to verify
+        withPassword: { attributes: {} },
     },
 });
 

@@ -83,7 +83,7 @@ export default function Navbar() {
                 </ul>
 
                 <Link
-                    href="/join"
+                    href="/signup"
                     className="group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-sakura via-twilight to-sky px-5 py-2 text-sm font-bold text-white shadow-lg shadow-sakura/30 transition hover:scale-105 hover:shadow-sakura/50 active:scale-95 md:inline-flex"
                 >
                     <span className="relative z-10">Join Hanabi →</span>
@@ -135,7 +135,7 @@ export default function Navbar() {
                     })}
                     <li className="pt-1">
                         <Link
-                            href="/join"
+                            href="/signup"
                             className="flex items-center justify-center rounded-xl bg-gradient-to-r from-sakura via-twilight to-sky px-4 py-3 text-sm font-bold text-white shadow-lg shadow-sakura/30"
                         >
                             Join Hanabi →

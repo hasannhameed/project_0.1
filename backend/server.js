@@ -1,75 +1,60 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
 const sequelize = require('./src/config/db');
 const User = require('./src/models/user.model');
+const authRoutes = require('./src/routes/auth.routes');
+const { requireAuth } = require('./src/middlewares/auth.middleware');
+
 const PORT = process.env.PORT || 5000;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:3000';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: CORS_ORIGIN.split(',').map((o) => o.trim()),
+    credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
 
-app.get('/api/hello', async (req, res) => {
-    res.json({ "message": "Hello from the backend" });
-});
+// Auth
+app.use('/api/auth', authRoutes);
 
-app.get('/api/sms', async (req, res) => {
-    res.json({ "sms": "Hello from the backend" });
-});
+// Health checks (existing)
+app.get('/api/hello', (_req, res) => res.json({ message: 'Hello from the backend' }));
 
-app.get('/api/test', async (req, res) => {
-    res.json({ "test": "Hello from the backend" });
-});
+// Example protected route — uncomment to test
+// app.get('/api/protected', requireAuth, (req, res) => {
+//     res.json({ message: `Hi ${req.user.name}, you are authenticated.` });
+// });
 
-app.get('/api/test2', async (req, res) => {
-    res.json({ "test": "Hello from the backend" });
-});
-
-app.post('/api/users', async (req, res) => {
-    const user = await User.create(req.body);
-    res.json(user);
-});
-
-app.get('/api/users', async (req, res) => {
+// User CRUD (admin / dev only — protect these or remove for production)
+app.get('/api/users', requireAuth, async (_req, res) => {
     const users = await User.findAll();
     res.json(users);
 });
 
-app.put('/api/users/:id', async (req, res) => {
+app.put('/api/users/:id', requireAuth, async (req, res) => {
     const { id } = req.params;
-
-    await User.update(req.body, {
-        where: { id },
-    });
-
-
+    await User.update(req.body, { where: { id } });
     const updated = await User.findByPk(id);
     res.json(updated);
 });
 
-app.delete('/api/users/:id', async (req, res) => {
+app.delete('/api/users/:id', requireAuth, async (req, res) => {
     const { id } = req.params;
-
-    await User.destroy({
-        where: { id },
-    });
-
+    await User.destroy({ where: { id } });
     res.json({ message: 'Deleted' });
 });
 
-
-sequelize.sync()
+sequelize.sync({ alter: true })
     .then(() => {
-        console.log('✅ DB connected, running server on 5000'),
-            app.listen(PORT, () => {
-                console.log(`🚀 Server running on http://localhost:${PORT}`);
-            });
-
+        console.log('✅ DB connected');
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running on http://localhost:${PORT}`);
+        });
     })
-    .catch(err => console.error(err));
-
-
-
-
-
-
+    .catch((err) => console.error('❌ DB sync failed:', err));

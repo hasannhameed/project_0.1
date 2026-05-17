@@ -301,7 +301,7 @@ export default async function Homepage() {
                     </p>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                         <Link
-                            href="/join"
+                            href="/signup"
                             className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-bold text-black shadow-xl transition hover:scale-105 active:scale-95"
                         >
                             <span>Join Hanabi</span>
