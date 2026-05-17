@@ -20,10 +20,15 @@ function verifyToken(token) {
 }
 
 const COOKIE_NAME = 'hanabi_token';
+
+// Cross-site cookies (frontend on logiclayers.in / localhost, backend on
+// api.logiclayers.in) REQUIRE sameSite: 'none' + secure: true.
+// Browsers refuse cookies that don't meet both conditions on cross-origin
+// fetch responses, regardless of CORS headers.
 const COOKIE_OPTIONS = {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+    secure: true,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
 };

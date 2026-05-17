@@ -24,8 +24,12 @@ const User = sequelize.define('User', {
         },
     },
     password: {
+        // Nullable at the DB level so adding this column to an existing
+        // Users table doesn't fail on pre-auth rows. The signup controller
+        // still requires a password for every new account, so legitimate
+        // users always have one.
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
 }, {
     // Never return password in default queries
