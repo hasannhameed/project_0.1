@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { signup as signupApi } from "@/lib/authClient";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function Signup() {
+    const { refresh } = useAuth();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -37,6 +39,7 @@ export default function Signup() {
         setSubmitting(true);
         try {
             await signupApi({ name: name.trim(), email: email.trim(), password });
+            await refresh();
             setDone(true);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Sign up failed. Try again.");
@@ -106,10 +109,10 @@ export default function Signup() {
                                     Your account at <strong className="text-white">{email}</strong> is ready. You&apos;re logged in and good to go.
                                 </p>
                                 <Link
-                                    href="/"
+                                    href="/dashboard"
                                     className="group relative mt-6 inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-sakura via-twilight to-sky px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-sakura/30 transition hover:scale-105"
                                 >
-                                    <span>Browse anime</span>
+                                    <span>Go to your dashboard</span>
                                     <span className="transition group-hover:translate-x-1">→</span>
                                 </Link>
                             </div>

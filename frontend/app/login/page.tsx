@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login as loginApi } from "@/lib/authClient";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function Login() {
     const router = useRouter();
+    const { refresh } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(true);
@@ -24,8 +26,8 @@ export default function Login() {
         setSubmitting(true);
         try {
             await loginApi({ email: email.trim(), password });
-            router.push("/");
-            router.refresh();
+            await refresh();
+            router.push("/dashboard");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Login failed. Try again.");
             setSubmitting(false);

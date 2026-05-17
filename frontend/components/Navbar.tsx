@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuth } from "./AuthProvider";
 
 const LINKS = [
     { href: "/", label: "Home" },
@@ -13,8 +14,10 @@ const LINKS = [
 
 export default function Navbar() {
     const pathname = usePathname();
+    const { user, loading } = useAuth();
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 8);
@@ -82,13 +85,40 @@ export default function Navbar() {
                     })}
                 </ul>
 
-                <Link
-                    href="/signup"
-                    className="group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-sakura via-twilight to-sky px-5 py-2 text-sm font-bold text-white shadow-lg shadow-sakura/30 transition hover:scale-105 hover:shadow-sakura/50 active:scale-95 md:inline-flex"
-                >
-                    <span className="relative z-10">Join Hanabi →</span>
-                    <span className="shimmer-overlay" />
-                </Link>
+                {/* Desktop CTA — logged-in users see their avatar + name; logged-out users see "Join Hanabi" */}
+                {user ? (
+                    <Link
+                        href="/dashboard"
+                        className={`hidden items-center gap-2.5 rounded-full border border-white/15 bg-white/5 py-1.5 pl-1.5 pr-4 backdrop-blur transition hover:border-sakura/40 hover:bg-white/10 md:inline-flex ${loading ? "pointer-events-none opacity-0" : "opacity-100"
+                            }`}
+                        aria-label="Open dashboard"
+                    >
+                        {user.avatar ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                                src={user.avatar}
+                                alt={user.name}
+                                className="h-8 w-8 rounded-full border border-white/10 object-cover"
+                            />
+                        ) : (
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-sakura via-twilight to-sky text-xs font-black text-white">
+                                {user.name.slice(0, 1).toUpperCase()}
+                            </span>
+                        )}
+                        <span className="max-w-[120px] truncate text-sm font-semibold text-white">
+                            {user.name.split(" ")[0]}
+                        </span>
+                    </Link>
+                ) : (
+                    <Link
+                        href="/signup"
+                        className={`group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-sakura via-twilight to-sky px-5 py-2 text-sm font-bold text-white shadow-lg shadow-sakura/30 transition hover:scale-105 hover:shadow-sakura/50 active:scale-95 md:inline-flex ${loading ? "pointer-events-none opacity-0" : "opacity-100"
+                            }`}
+                    >
+                        <span className="relative z-10">Join Hanabi →</span>
+                        <span className="shimmer-overlay" />
+                    </Link>
+                )}
 
                 <button
                     onClick={() => setOpen((v) => !v)}
@@ -134,12 +164,36 @@ export default function Navbar() {
                         );
                     })}
                     <li className="pt-1">
-                        <Link
-                            href="/signup"
-                            className="flex items-center justify-center rounded-xl bg-gradient-to-r from-sakura via-twilight to-sky px-4 py-3 text-sm font-bold text-white shadow-lg shadow-sakura/30"
-                        >
-                            Join Hanabi →
-                        </Link>
+                        {user ? (
+                            <Link
+                                href="/dashboard"
+                                className="flex items-center gap-3 rounded-xl border border-white/15 bg-white/5 px-4 py-3"
+                            >
+                                {user.avatar ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        src={user.avatar}
+                                        alt={user.name}
+                                        className="h-9 w-9 rounded-full border border-white/10 object-cover"
+                                    />
+                                ) : (
+                                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-sakura via-twilight to-sky text-sm font-black text-white">
+                                        {user.name.slice(0, 1).toUpperCase()}
+                                    </span>
+                                )}
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-sm font-semibold text-white">{user.name}</p>
+                                    <p className="text-[10px] uppercase tracking-wider text-white/50">Open dashboard →</p>
+                                </div>
+                            </Link>
+                        ) : (
+                            <Link
+                                href="/signup"
+                                className="flex items-center justify-center rounded-xl bg-gradient-to-r from-sakura via-twilight to-sky px-4 py-3 text-sm font-bold text-white shadow-lg shadow-sakura/30"
+                            >
+                                Join Hanabi →
+                            </Link>
+                        )}
                     </li>
                 </ul>
             </div>

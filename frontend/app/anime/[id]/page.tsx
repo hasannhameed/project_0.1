@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import TrailerLauncher from "@/components/TrailerLauncher";
+import Comments from "@/components/Comments";
+import LikeButton from "@/components/LikeButton";
 import {
     getAnimeByMalId,
     stripHtml,
@@ -150,6 +152,7 @@ export default async function AnimeDetail({
                                 {trailerVideoId && (
                                     <TrailerLauncher videoId={trailerVideoId} title={title} />
                                 )}
+                                <LikeButton animeMalId={malId} size="lg" />
                                 <Link
                                     href="/anime"
                                     className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:border-sakura/40 hover:bg-white/10"
@@ -327,6 +330,9 @@ export default async function AnimeDetail({
                     </div>
                 </section>
             )}
+
+            {/* Public comment thread */}
+            <Comments animeMalId={malId} />
         </main>
     );
 }

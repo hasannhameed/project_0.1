@@ -26,12 +26,12 @@ export default function Loading() {
             </section>
 
             <section className="mx-auto max-w-7xl px-6 pb-24 sm:px-8">
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-                    {Array.from({ length: 12 }).map((_, i) => (
+                <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                    {Array.from({ length: 18 }).map((_, i) => (
                         <div
                             key={i}
-                            className="aspect-[3/4] animate-pulse rounded-3xl border border-white/10 bg-white/[0.03]"
-                            style={{ animationDelay: `${i * 60}ms` }}
+                            className="aspect-[3/4] animate-pulse rounded-2xl border border-white/10 bg-white/[0.03]"
+                            style={{ animationDelay: `${i * 30}ms` }}
                         />
                     ))}
                 </div>

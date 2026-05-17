@@ -273,6 +273,26 @@ body::after {
   color: var(--background);
 }
 
+/* Tailwind v4 dropped the default pointer cursor on <button>. Bring it back
+   for anything clickable so the UI feels right. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+summary,
+a[href],
+label[for],
+select:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="button"]:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 .font-display {
   font-family: var(--font-display), var(--font-sans), sans-serif;
 }

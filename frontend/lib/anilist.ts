@@ -145,6 +145,45 @@ export async function getAnimeByMalId(malId: number): Promise<AnilistAnime | nul
     return data.Media;
 }
 
+export type AnilistTrendingItem = {
+    idMal: number | null;
+    title: { romaji: string; english: string | null; native: string | null };
+    seasonYear: number | null;
+    episodes: number | null;
+    averageScore: number | null;
+    genres: string[];
+    coverImage: { large: string; extraLarge: string };
+};
+
+const TRENDING_QUERY = `
+    query Trending($perPage: Int!) {
+        Page(perPage: $perPage) {
+            media(type: ANIME, sort: TRENDING_DESC, isAdult: false) {
+                idMal
+                title { romaji english native }
+                seasonYear
+                episodes
+                averageScore
+                genres
+                coverImage { large extraLarge }
+            }
+        }
+    }
+`;
+
+// Updates daily based on AniList community activity — this is the
+// "what's hot right now" list that actually shifts week to week.
+// Cached for 1 hour at the server level so visitors aren't refetching it
+// per request.
+export async function getTrending(limit = 12): Promise<AnilistTrendingItem[]> {
+    const data = await graphql<{ Page: { media: AnilistTrendingItem[] } }>(
+        TRENDING_QUERY,
+        { perPage: limit },
+        3600,
+    );
+    return data.Page.media.filter((m) => m.idMal !== null);
+}
+
 export function stripHtml(s: string | null) {
     if (!s) return "";
     return s.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "").trim();

@@ -1,7 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import AnimeSearch from "@/components/AnimeSearch";
-import { getTopAnime, getSeasonNow } from "@/lib/jikan";
+import AnimeRow from "@/components/AnimeRow";
+import {
+    getTrendingAnime,
+    getTopAnime,
+    getTopAiring,
+    getSeasonNow,
+    getSeasonUpcoming,
+    getMostPopular,
+    getMostFavorited,
+    getTopMovies,
+} from "@/lib/jikan";
 
 const STATS = [
     { value: "1.2M", label: "Active fans" },
@@ -13,19 +23,37 @@ const STATS = [
 export const revalidate = 3600;
 
 export default async function Homepage() {
-    const [top, season] = await Promise.all([getTopAnime(12), getSeasonNow(12)]);
+    // Fan out every category in parallel — one round-trip total
+    const [
+        trending,
+        top,
+        airing,
+        seasonNow,
+        seasonUpcoming,
+        popular,
+        favorites,
+        movies,
+    ] = await Promise.all([
+        getTrendingAnime(12),
+        getTopAnime(12),
+        getTopAiring(12),
+        getSeasonNow(12),
+        getSeasonUpcoming(12),
+        getMostPopular(12),
+        getMostFavorited(12),
+        getTopMovies(12),
+    ]);
 
-    const heroPrimary = top[0];
-    const heroSecondary = top[1];
-    const heroTertiary = top[2];
-    const trending = top.slice(0, 6);
+    const heroPrimary = trending[0];
+    const heroSecondary = trending[1];
+    const heroTertiary = trending[2];
 
     const collectionPicks = [
         {
             title: "Now Airing",
             eyebrow: "This season",
             desc: "Currently dropping episodes this season.",
-            anime: season[0] ?? top[3],
+            anime: seasonNow[0] ?? top[3],
             href: "/anime",
         },
         {
@@ -169,72 +197,65 @@ export default async function Homepage() {
                 </div>
             </section>
 
-            {/* TRENDING */}
-            <section className="relative px-6 py-20 sm:px-8">
-                <div className="mx-auto max-w-7xl">
-                    <div className="flex items-end justify-between gap-6">
-                        <div>
-                            <span className="text-xs font-bold uppercase tracking-[0.3em] text-sky">
-                                trending now
-                            </span>
-                            <h2 className="mt-2 font-display text-4xl sm:text-5xl">
-                                <span className="gradient-text">This week&apos;s heaters</span>
-                            </h2>
-                        </div>
-                        <Link
-                            href="/anime"
-                            className="hidden shrink-0 items-center gap-2 text-sm font-semibold text-white/70 hover:text-white sm:inline-flex"
-                        >
-                            See all <span>→</span>
-                        </Link>
-                    </div>
-
-                    <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                        {trending.map((a, i) => (
-                            <Link
-                                key={a.mal_id}
-                                href={`/anime/${a.mal_id}`}
-                                className="group relative block animate-rise overflow-hidden rounded-3xl border border-white/10 transition hover:-translate-y-2 hover:border-sakura/40 hover:shadow-2xl hover:shadow-sakura/25"
-                                style={{ animationDelay: `${i * 60}ms` }}
-                            >
-                                <div className="relative aspect-[16/10] overflow-hidden">
-                                    <Image
-                                        src={a.images.jpg.large_image_url}
-                                        alt={a.title}
-                                        fill
-                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                        className="object-cover opacity-80 transition duration-700 group-hover:scale-110 group-hover:opacity-100"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                                    {a.genres[0] && (
-                                        <span className="absolute top-3 left-3 rounded-full border border-white/20 bg-black/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur">
-                                            {a.genres[0].name}
-                                        </span>
-                                    )}
-                                    {a.score !== null && (
-                                        <span className="absolute top-3 right-3 rounded-full bg-gradient-to-r from-sakura to-twilight px-3 py-1 text-[10px] font-bold text-white shadow-lg shadow-sakura/30">
-                                            ★ {a.score.toFixed(1)}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="p-5">
-                                    {a.title_english && a.title_english !== a.title && (
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-sakura-soft/70 line-clamp-1">
-                                            {a.title_english}
-                                        </p>
-                                    )}
-                                    <h3 className="mt-1 font-display text-2xl text-white line-clamp-1">
-                                        {a.title}
-                                    </h3>
-                                    <p className="mt-1 text-xs text-white/50">
-                                        {a.episodes ? `${a.episodes} episodes` : "Ongoing"}
-                                    </p>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            {/* Stacked anime category rows — each "See all" deep-links to /anime?list=… */}
+            <div className="pt-12">
+                <AnimeRow
+                    eyebrow="trending now"
+                    title="This week's heaters"
+                    accent="text-sky"
+                    items={trending}
+                    seeAllHref="/anime?list=trending"
+                />
+                <AnimeRow
+                    eyebrow="all-time best"
+                    title="Top anime"
+                    accent="text-sakura"
+                    items={top}
+                    seeAllHref="/anime?list=top"
+                />
+                <AnimeRow
+                    eyebrow="now airing"
+                    title="Currently airing"
+                    accent="text-sunset"
+                    items={airing}
+                    seeAllHref="/anime?list=airing"
+                />
+                <AnimeRow
+                    eyebrow="this season"
+                    title="New this season"
+                    accent="text-twilight"
+                    items={seasonNow}
+                    seeAllHref="/anime?list=season"
+                />
+                <AnimeRow
+                    eyebrow="most popular"
+                    title="Most popular of all time"
+                    accent="text-sakura-soft"
+                    items={popular}
+                    seeAllHref="/anime?list=popular"
+                />
+                <AnimeRow
+                    eyebrow="fan favorites"
+                    title="Most favorited"
+                    accent="text-lantern"
+                    items={favorites}
+                    seeAllHref="/anime?list=favorite"
+                />
+                <AnimeRow
+                    eyebrow="cinema"
+                    title="Top movies"
+                    accent="text-peach"
+                    items={movies}
+                    seeAllHref="/anime?list=movies"
+                />
+                <AnimeRow
+                    eyebrow="coming soon"
+                    title="Upcoming next season"
+                    accent="text-sky"
+                    items={seasonUpcoming}
+                    seeAllHref="/anime?list=upcoming"
+                />
+            </div>
 
             {/* COLLECTIONS */}
             <section className="relative px-6 py-20 sm:px-8">

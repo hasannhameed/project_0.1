@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Chrome from "@/components/Chrome";
+import { AuthProvider } from "@/components/AuthProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,9 +39,11 @@ export default function RootLayout({
       className={`${inter.variable} ${mochiy.variable} ${kanit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Chrome navbar={<Navbar />} footer={<Footer />}>
-          {children}
-        </Chrome>
+        <AuthProvider>
+          <Chrome navbar={<Navbar />} footer={<Footer />}>
+            {children}
+          </Chrome>
+        </AuthProvider>
       </body>
     </html>
   );
