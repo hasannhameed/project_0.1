@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // External anime CDNs (MAL, AniList) already serve sized, cached images.
+    // Disable Next's optimizer so we don't burn Vercel's image-optimization
+    // quota and don't depend on a server fetch that MAL sometimes 403s.
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "cdn.myanimelist.net" },
       { protocol: "https", hostname: "myanimelist.net" },
