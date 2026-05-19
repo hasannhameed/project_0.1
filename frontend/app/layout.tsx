@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Mochiy_Pop_One, Kanit } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -44,6 +45,7 @@ export default function RootLayout({
             {children}
           </Chrome>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
