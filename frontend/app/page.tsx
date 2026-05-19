@@ -23,17 +23,10 @@ const STATS = [
 export const revalidate = 3600;
 
 export default async function Homepage() {
-    // Fan out every category in parallel — one round-trip total
-    const [
-        trending,
-        top,
-        airing,
-        seasonNow,
-        seasonUpcoming,
-        popular,
-        favorites,
-        movies,
-    ] = await Promise.all([
+    // Fan out every category in parallel. allSettled keeps a single Jikan
+    // 429 from blowing up the entire prerender — empty rows are filtered
+    // out downstream by AnimeRow.
+    const settled = await Promise.allSettled([
         getTrendingAnime(12),
         getTopAnime(12),
         getTopAiring(12),
@@ -43,6 +36,16 @@ export default async function Homepage() {
         getMostFavorited(12),
         getTopMovies(12),
     ]);
+    const [
+        trending,
+        top,
+        airing,
+        seasonNow,
+        seasonUpcoming,
+        popular,
+        favorites,
+        movies,
+    ] = settled.map((r) => (r.status === "fulfilled" ? r.value : []));
 
     const heroPrimary = trending[0];
     const heroSecondary = trending[1];

@@ -35,9 +35,17 @@ export type JikanCharacter = {
 type Page<T> = { data: T[] };
 
 async function jikan<T>(path: string, revalidate = 3600): Promise<T> {
-    const res = await fetch(`${BASE}${path}`, { next: { revalidate } });
-    if (!res.ok) throw new Error(`Jikan ${path} → ${res.status}`);
-    return res.json();
+    // Jikan caps unauthenticated traffic at ~3 req/s; during prerender we
+    // can easily trip a 429. Retry a few times with backoff before giving up.
+    for (let attempt = 0; attempt < 4; attempt++) {
+        const res = await fetch(`${BASE}${path}`, { next: { revalidate } });
+        if (res.ok) return res.json();
+        if (res.status !== 429 || attempt === 3) {
+            throw new Error(`Jikan ${path} → ${res.status}`);
+        }
+        await new Promise((r) => setTimeout(r, 600 * (attempt + 1)));
+    }
+    throw new Error(`Jikan ${path} → exhausted retries`);
 }
 
 export async function getTopAnime(limit = 24, page = 1): Promise<JikanAnime[]> {
