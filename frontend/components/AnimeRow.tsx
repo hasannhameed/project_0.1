@@ -54,6 +54,13 @@ export default function AnimeRow({
 
     if (!items || items.length === 0) return null;
 
+    const seen = new Set<number>();
+    const uniqueItems = items.filter((a) => {
+        if (seen.has(a.mal_id)) return false;
+        seen.add(a.mal_id);
+        return true;
+    });
+
     return (
         <section className="relative mx-auto max-w-7xl px-6 pb-12 sm:px-8">
             <div className="mb-4 flex items-end justify-between gap-4">
@@ -119,7 +126,7 @@ export default function AnimeRow({
                     ref={scrollerRef}
                     className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
                 >
-                    {items.map((a, i) => {
+                    {uniqueItems.map((a, i) => {
                         const c = cardColor(i);
                         return (
                             <article
