@@ -60,9 +60,9 @@ async function login(req, res) {
         }
 
         const user = await User.scope('withPassword').findOne({
-            where: { email: email.toLowerCase() },
+            where: { email: email.toLowerCase().trim() },
         });
-        if (!user) {
+        if (!user || !user.password) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 

@@ -1,4 +1,6 @@
-const API = process.env.NEXT_PUBLIC_API_URL ?? "";
+let API = process.env.NEXT_PUBLIC_API_URL ?? "";
+if (API.endsWith("/")) API = API.slice(0, -1);
+if (API.endsWith("/api")) API = API.slice(0, -4);
 
 if (!API && typeof window !== "undefined") {
     console.warn("NEXT_PUBLIC_API_URL is not set. Auth calls will fail.");

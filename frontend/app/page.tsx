@@ -332,6 +332,12 @@ export default async function Homepage() {
                             <span className="transition group-hover:translate-x-1">→</span>
                         </Link>
                         <Link
+                            href="/login"
+                            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:border-white/40 hover:bg-white/10"
+                        >
+                            Log in
+                        </Link>
+                        <Link
                             href="/about"
                             className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:border-white/40 hover:bg-white/10"
                         >
