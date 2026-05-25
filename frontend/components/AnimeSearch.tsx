@@ -80,7 +80,7 @@ export default function AnimeSearch({ initialQuery = "" }: { initialQuery?: stri
     const submitSearch = () => {
         const trimmed = q.trim();
         if (!trimmed) return;
-        router.push(`/anime?q=${encodeURIComponent(trimmed)}`);
+        router.push(`/catalog?q=${encodeURIComponent(trimmed)}`);
         setOpen(false);
         inputRef.current?.blur();
     };

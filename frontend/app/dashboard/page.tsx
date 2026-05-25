@@ -11,7 +11,7 @@ const QUICK_LINKS = [
     {
         title: "Anime Catalog",
         desc: "Top titles refreshed hourly from MyAnimeList.",
-        href: "/anime",
+        href: "/catalog",
         accent: "text-sakura",
         gradient: "from-sakura to-twilight",
     },

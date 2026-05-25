@@ -276,7 +276,7 @@ export default function Join() {
                     </p>
                     <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                         <Link
-                            href="/anime"
+                            href="/catalog"
                             className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-sakura via-twilight to-sky px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-sakura/30 transition hover:scale-105"
                         >
                             <span>Browse anime</span>

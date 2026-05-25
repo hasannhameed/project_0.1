@@ -11,7 +11,7 @@ export default function AnimeRow({
     eyebrow,
     accent = "text-sakura",
     items,
-    seeAllHref = "/anime",
+    seeAllHref = "/catalog",
 }: {
     title: string;
     eyebrow?: string;

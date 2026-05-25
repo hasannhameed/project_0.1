@@ -12,7 +12,7 @@ export default function Chrome({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
-    const isPortfolio = pathname === "/hasan" || pathname?.startsWith("/hasan/");
+    const isPortfolio = pathname === "/";
 
     return (
         <>

@@ -154,7 +154,7 @@ export default async function AnimeDetail({
                                 )}
                                 <LikeButton animeMalId={malId} size="lg" />
                                 <Link
-                                    href="/anime"
+                                    href="/catalog"
                                     className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:border-sakura/40 hover:bg-white/10"
                                 >
                                     ← Back to catalog
