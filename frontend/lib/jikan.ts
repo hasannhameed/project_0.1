@@ -35,6 +35,13 @@ export type JikanCharacter = {
 type Page<T> = { data: T[] };
 
 async function jikan<T>(path: string, revalidate = 3600): Promise<T> {
+    // In CI/Vercel builds, Vercel fires 8+ requests at the exact same millisecond 
+    // due to Promise.all(), instantly hitting Jikan's 3 requests/sec limit.
+    // Staggering them randomly over 15 seconds prevents the initial burst.
+    if (process.env.CI || process.env.npm_lifecycle_event === "build") {
+        await new Promise((r) => setTimeout(r, Math.random() * 15000));
+    }
+
     // Jikan caps unauthenticated traffic at ~3 req/s; during prerender we
     // can easily trip a 429. Retry a few times with backoff before giving up.
     for (let attempt = 0; attempt < 6; attempt++) {
@@ -43,9 +50,9 @@ async function jikan<T>(path: string, revalidate = 3600): Promise<T> {
         if (res.status !== 429 || attempt === 5) {
             throw new Error(`Jikan ${path} → ${res.status}`);
         }
-        // Add random jitter so parallel build workers don't synchronize retries
-        const jitter = Math.random() * 1000;
-        await new Promise((r) => setTimeout(r, 2000 * (attempt + 1) + jitter));
+        // Add massive random jitter so parallel build workers completely desync
+        const jitter = Math.random() * 10000;
+        await new Promise((r) => setTimeout(r, 4000 * (attempt + 1) + jitter));
     }
     throw new Error(`Jikan ${path} → exhausted retries`);
 }
