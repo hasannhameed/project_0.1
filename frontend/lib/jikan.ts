@@ -37,13 +37,15 @@ type Page<T> = { data: T[] };
 async function jikan<T>(path: string, revalidate = 3600): Promise<T> {
     // Jikan caps unauthenticated traffic at ~3 req/s; during prerender we
     // can easily trip a 429. Retry a few times with backoff before giving up.
-    for (let attempt = 0; attempt < 4; attempt++) {
+    for (let attempt = 0; attempt < 6; attempt++) {
         const res = await fetch(`${BASE}${path}`, { next: { revalidate } });
         if (res.ok) return res.json();
-        if (res.status !== 429 || attempt === 3) {
+        if (res.status !== 429 || attempt === 5) {
             throw new Error(`Jikan ${path} → ${res.status}`);
         }
-        await new Promise((r) => setTimeout(r, 600 * (attempt + 1)));
+        // Add random jitter so parallel build workers don't synchronize retries
+        const jitter = Math.random() * 1000;
+        await new Promise((r) => setTimeout(r, 2000 * (attempt + 1) + jitter));
     }
     throw new Error(`Jikan ${path} → exhausted retries`);
 }
