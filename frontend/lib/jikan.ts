@@ -34,32 +34,86 @@ export type JikanCharacter = {
 
 type Page<T> = { data: T[] };
 
+// Next aborts a prerender that runs past 60s, so every retry schedule below
+// has to finish inside that budget — otherwise the page is killed before the
+// empty-list fallback can return and the whole build fails.
+const RETRY_BUDGET_MS = 35_000;
+const REQUEST_TIMEOUT_MS = 8_000;
+
+const isBuild = () =>
+    !!process.env.CI || process.env.npm_lifecycle_event === "build";
+
 async function jikan<T>(path: string, revalidate = 3600): Promise<T> {
-    // In CI/Vercel builds, Vercel fires 8+ requests at the exact same millisecond 
-    // due to Promise.all(), instantly hitting Jikan's 3 requests/sec limit.
-    // Staggering them randomly over 15 seconds prevents the initial burst.
-    if (process.env.CI || process.env.npm_lifecycle_event === "build") {
-        await new Promise((r) => setTimeout(r, Math.random() * 15000));
+    const deadline = Date.now() + RETRY_BUDGET_MS;
+
+    // Vercel fires several requests in the same millisecond via Promise.all(),
+    // instantly hitting Jikan's 3 req/s limit. A short random stagger breaks
+    // up that burst without eating much of the budget.
+    if (isBuild()) {
+        await new Promise((r) => setTimeout(r, Math.random() * 2000));
     }
 
-    // Jikan caps unauthenticated traffic at ~3 req/s; during prerender we
-    // can easily trip a 429. Retry a few times with backoff before giving up.
-    for (let attempt = 0; attempt < 6; attempt++) {
-        const res = await fetch(`${BASE}${path}`, { next: { revalidate } });
-        if (res.ok) return res.json();
-        if (res.status !== 429 || attempt === 5) {
-            throw new Error(`Jikan ${path} → ${res.status}`);
+    let lastErr: unknown;
+    for (let attempt = 0; ; attempt++) {
+        let retryable = true;
+        try {
+            const res = await fetch(`${BASE}${path}`, {
+                next: { revalidate },
+                signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+            });
+            if (res.ok) return res.json();
+            // 429 is the rate limit; 5xx is worth another shot. Anything else
+            // (404, 400) will fail the same way every time.
+            retryable = res.status === 429 || res.status >= 500;
+            lastErr = new Error(`Jikan ${path} → ${res.status}`);
+        } catch (err) {
+            // Connect timeouts and aborts land here and are always retryable.
+            lastErr = err;
         }
-        // Add massive random jitter so parallel build workers completely desync
-        const jitter = Math.random() * 10000;
-        await new Promise((r) => setTimeout(r, 4000 * (attempt + 1) + jitter));
+
+        const backoff = 1000 * 2 ** attempt + Math.random() * 500;
+        if (!retryable || Date.now() + backoff >= deadline) break;
+        await new Promise((r) => setTimeout(r, backoff));
     }
-    throw new Error(`Jikan ${path} → exhausted retries`);
+    throw lastErr ?? new Error(`Jikan ${path} → exhausted retries`);
+}
+
+// Same reasoning as jikanList, for the AniList GraphQL endpoint.
+async function anilistQuery(
+    query: string,
+    variables: Record<string, number>,
+): Promise<{ data?: { Page?: { media?: unknown[] } } } | null> {
+    try {
+        const res = await fetch("https://graphql.anilist.co", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({ query, variables }),
+            next: { revalidate: 3600 },
+            signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch (err) {
+        console.error("[anilist] query failed:", err);
+        return null;
+    }
+}
+
+// A prerendered page must never take the whole build down because MAL is
+// having a bad day. Fall back to an empty list; ISR refills it on the next
+// revalidate once the API recovers.
+async function jikanList<T>(path: string, revalidate = 3600): Promise<T[]> {
+    try {
+        const { data } = await jikan<Page<T>>(path, revalidate);
+        return data;
+    } catch (err) {
+        console.error(`[jikan] falling back to empty list for ${path}:`, err);
+        return [];
+    }
 }
 
 export async function getTopAnime(limit = 24, page = 1): Promise<JikanAnime[]> {
-    const { data } = await jikan<Page<JikanAnime>>(`/top/anime?limit=${limit}&page=${page}`);
-    return data;
+    return jikanList<JikanAnime>(`/top/anime?limit=${limit}&page=${page}`);
 }
 
 // AniList's TRENDING_DESC — actually shifts day-to-day based on community
@@ -81,14 +135,7 @@ export async function getTrendingAnime(limit = 12): Promise<JikanAnime[]> {
             }
         }
     `;
-    const res = await fetch("https://graphql.anilist.co", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ query: gql, variables: { perPage: limit } }),
-        next: { revalidate: 3600 },
-    });
-    if (!res.ok) return [];
-    const json = await res.json();
+    const json = await anilistQuery(gql, { perPage: limit });
     type AniListMedia = {
         idMal: number | null;
         title: { romaji: string; english: string | null; native: string | null };
@@ -147,8 +194,7 @@ export async function searchAnime(
         sort: "desc",
         sfw: "true",
     });
-    const { data } = await jikan<Page<JikanAnime>>(`/anime?${params.toString()}`, 600);
-    return data;
+    return jikanList<JikanAnime>(`/anime?${params.toString()}`, 600);
 }
 
 export async function getAnimeByGenre(
@@ -162,8 +208,7 @@ export async function getAnimeByGenre(
             limit: String(limit),
             page: String(page),
         });
-        const { data } = await jikan<Page<JikanAnime>>(`/top/anime?${params.toString()}`);
-        return data;
+        return jikanList<JikanAnime>(`/top/anime?${params.toString()}`);
     }
 
     const params = new URLSearchParams({
@@ -175,44 +220,36 @@ export async function getAnimeByGenre(
         min_score: "7",
         sfw: "true",
     });
-    const { data } = await jikan<Page<JikanAnime>>(`/anime?${params.toString()}`);
-    return data;
+    return jikanList<JikanAnime>(`/anime?${params.toString()}`);
 }
 
 export async function getSeasonNow(limit = 12, page = 1): Promise<JikanAnime[]> {
-    const { data } = await jikan<Page<JikanAnime>>(`/seasons/now?limit=${limit}&page=${page}`);
-    return data;
+    return jikanList<JikanAnime>(`/seasons/now?limit=${limit}&page=${page}`);
 }
 
 export async function getSeasonUpcoming(limit = 12, page = 1): Promise<JikanAnime[]> {
-    const { data } = await jikan<Page<JikanAnime>>(`/seasons/upcoming?limit=${limit}&page=${page}`);
-    return data;
+    return jikanList<JikanAnime>(`/seasons/upcoming?limit=${limit}&page=${page}`);
 }
 
 // MAL's filter variants on /top/anime — different curated rankings
 export async function getTopAiring(limit = 12, page = 1): Promise<JikanAnime[]> {
-    const { data } = await jikan<Page<JikanAnime>>(`/top/anime?filter=airing&limit=${limit}&page=${page}`);
-    return data;
+    return jikanList<JikanAnime>(`/top/anime?filter=airing&limit=${limit}&page=${page}`);
 }
 
 export async function getTopUpcoming(limit = 12, page = 1): Promise<JikanAnime[]> {
-    const { data } = await jikan<Page<JikanAnime>>(`/top/anime?filter=upcoming&limit=${limit}&page=${page}`);
-    return data;
+    return jikanList<JikanAnime>(`/top/anime?filter=upcoming&limit=${limit}&page=${page}`);
 }
 
 export async function getMostPopular(limit = 12, page = 1): Promise<JikanAnime[]> {
-    const { data } = await jikan<Page<JikanAnime>>(`/top/anime?filter=bypopularity&limit=${limit}&page=${page}`);
-    return data;
+    return jikanList<JikanAnime>(`/top/anime?filter=bypopularity&limit=${limit}&page=${page}`);
 }
 
 export async function getMostFavorited(limit = 12, page = 1): Promise<JikanAnime[]> {
-    const { data } = await jikan<Page<JikanAnime>>(`/top/anime?filter=favorite&limit=${limit}&page=${page}`);
-    return data;
+    return jikanList<JikanAnime>(`/top/anime?filter=favorite&limit=${limit}&page=${page}`);
 }
 
 export async function getTopMovies(limit = 12, page = 1): Promise<JikanAnime[]> {
-    const { data } = await jikan<Page<JikanAnime>>(`/top/anime?type=movie&limit=${limit}&page=${page}`);
-    return data;
+    return jikanList<JikanAnime>(`/top/anime?type=movie&limit=${limit}&page=${page}`);
 }
 
 // Adapter for the trending feed so the catalog page can paginate through it.
@@ -232,14 +269,7 @@ export async function getTrendingAnimePage(limit = 24, page = 1): Promise<JikanA
             }
         }
     `;
-    const res = await fetch("https://graphql.anilist.co", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ query: gql, variables: { perPage: limit, page } }),
-        next: { revalidate: 3600 },
-    });
-    if (!res.ok) return [];
-    const json = await res.json();
+    const json = await anilistQuery(gql, { perPage: limit, page });
     type AniListMedia = {
         idMal: number | null;
         title: { romaji: string; english: string | null; native: string | null };
@@ -290,8 +320,7 @@ export function isListSlug(v: string | undefined): v is ListSlug {
 }
 
 export async function getTopCharacters(limit = 16): Promise<JikanCharacter[]> {
-    const { data } = await jikan<Page<JikanCharacter>>(`/top/characters?limit=${limit}`);
-    return data;
+    return jikanList<JikanCharacter>(`/top/characters?limit=${limit}`);
 }
 
 const CARD_COLORS = [
