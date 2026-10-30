@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Mochiy_Pop_One, Kanit } from "next/font/google";
+import { Inter, Mochiy_Pop_One, Kanit, Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -15,6 +15,13 @@ const inter = Inter({
 const mochiy = Mochiy_Pop_One({
   variable: "--font-mochiy",
   weight: "400",
+  subsets: ["latin"],
+});
+
+// Used by the portfolio landing page at "/".
+const poppins = Poppins({
+  variable: "--font-poppins-src",
+  weight: ["100", "200", "300", "400", "500", "600"],
   subsets: ["latin"],
 });
 
@@ -37,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${mochiy.variable} ${kanit.variable} h-full antialiased`}
+      className={`${inter.variable} ${mochiy.variable} ${kanit.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>

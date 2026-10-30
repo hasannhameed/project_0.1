@@ -37,6 +37,9 @@
   --twilight: var(--tokyo-deep);
   --lantern: var(--sunset-warmth); /* Changed from red to warm orange */
   --cream: var(--foreground);
+
+  /* Portfolio landing page ("/") — muted brick red on black */
+  --brand: #b74b4b;
 }
 
 @theme inline {
@@ -65,7 +68,10 @@
 
   --font-sans: var(--font-inter);
   /* Keeping font definition, but name implies display style needed */
-  --font-display: var(--font-mochiy); 
+  --font-display: var(--font-mochiy);
+  --font-poppins: var(--font-poppins-src);
+
+  --color-brand: var(--brand);
 
   /* Animations adapted for atmospheric, watery, and light effects */
   --animate-float: float 6s ease-in-out infinite;
@@ -400,4 +406,16 @@ button:disabled,
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+/* The portfolio route at "/" is a flat-black design. The atmospheric gradient
+   and rain overlays above are fixed to the viewport, so any area the page's
+   own black background doesn't cover shows them as a blue-grey band. Scope
+   them off (and black out the canvas) whenever the portfolio is on screen. */
+body:has(.portfolio-root) {
+  background: #000;
+}
+
+body:has(.portfolio-root)::before,
+body:has(.portfolio-root)::after {
+  display: none;
 }

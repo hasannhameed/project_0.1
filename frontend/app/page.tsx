@@ -1,9 +1,21 @@
+import PortfolioHeader from "@/components/hasan/PortfolioHeader";
+import HeroSection from "@/components/hasan/HeroSection";
+import ServicesSection from "@/components/hasan/ServicesSection";
+import SkillsSection from "@/components/hasan/SkillsSection";
+import EducationSection from "@/components/hasan/EducationSection";
+import ExperienceSection from "@/components/hasan/ExperienceSection";
+import ContactSection from "@/components/hasan/ContactSection";
+
 export default function Home() {
   return (
-    <main className="font-kanit text-[#0F172A] bg-white min-h-screen flex items-center justify-center">
-      <p className="text-sm uppercase tracking-[0.2em] text-neutral-400">
-        Starting fresh
-      </p>
+    <main className="portfolio-root min-h-screen bg-black font-poppins text-white">
+      <PortfolioHeader />
+      <HeroSection />
+      <ServicesSection />
+      <SkillsSection />
+      <EducationSection />
+      <ExperienceSection />
+      <ContactSection />
     </main>
   );
 }
