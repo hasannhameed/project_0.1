@@ -8,7 +8,6 @@ const LINKS = [
     { label: "Skills", href: "#skills" },
     { label: "Education", href: "#education" },
     { label: "Experience", href: "#experience" },
-    { label: "Contact", href: "#contact" },
 ];
 
 // The source design set html{font-size:62.5%} so 1rem meant 10px. That would

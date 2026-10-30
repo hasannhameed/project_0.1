@@ -8,7 +8,6 @@ export const PROFILE = {
     roles: ["PHP Developer", "MERN Stack Developer"],
     intro:
         "Full-stack developer with 2 years building directory platforms, membership sites and e-commerce — from PHP and CodeIgniter backends to React and Next.js front ends. I've shipped 20+ directory websites for clients across the USA, UK and Australia.",
-    email: "nasiruddinsaikh2015@gmail.com",
 };
 
 export const SERVICES = [
@@ -88,16 +87,7 @@ export const EXPERIENCE = [
         points: [
             "Developed 20+ directory websites end to end.",
             "Customized PHP-based platforms to client requirements.",
-            "Worked directly with clients in the USA, UK and Australia.",
-        ],
-    },
-    {
-        role: "Freelance Web Developer",
-        period: "Ongoing",
-        points: [
-            "Delivered websites for business clients via Freelancer.com.",
-            "Customized Brilliant Directories installations.",
-            "Built membership systems, payment integrations and dashboards.",
+            "Worked under the founder and senior developers on projects for clients in the USA, UK and Australia.",
         ],
     },
     {
@@ -107,16 +97,6 @@ export const EXPERIENCE = [
             "Built directory-based websites in PHP.",
             "Gained hands-on experience across the development lifecycle.",
         ],
-    },
-];
-
-export const PROJECTS = [
-    { name: "My Hygienist", work: "Dental directory website and SEO" },
-    { name: "Logic Layers", work: "Website development" },
-    { name: "Hanabi", work: "Anime updates website" },
-    {
-        name: "Commercial Choice Bid Service",
-        work: "Membership, lead purchasing, payment gateway and dashboards",
     },
 ];
 

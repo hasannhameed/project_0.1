@@ -1,5 +1,5 @@
 import Section from "./Section";
-import { EXPERIENCE, PROJECTS } from "@/lib/profile";
+import { EXPERIENCE } from "@/lib/profile";
 
 export default function ExperienceSection() {
     return (
@@ -36,21 +36,6 @@ export default function ExperienceSection() {
                     </li>
                 ))}
             </ol>
-
-            <h3 className="mt-16 mb-6 text-sm font-semibold tracking-[2px] text-white/50 uppercase">
-                Selected projects
-            </h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-                {PROJECTS.map((p) => (
-                    <div
-                        key={p.name}
-                        className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:border-brand"
-                    >
-                        <h4 className="font-semibold text-white">{p.name}</h4>
-                        <p className="mt-1 text-sm text-white/65">{p.work}</p>
-                    </div>
-                ))}
-            </div>
         </Section>
     );
 }

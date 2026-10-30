@@ -30,7 +30,7 @@ export default function HeroSection() {
     return (
         <section
             id="home"
-            className="flex min-h-screen flex-col-reverse items-center justify-center gap-10 bg-black px-[9%] py-20 min-[995px]:flex-row min-[995px]:gap-20"
+            className="flex min-h-screen flex-col-reverse items-center justify-center gap-8 bg-black px-[9%] py-12 min-[995px]:flex-row min-[995px]:gap-20 min-[995px]:py-20"
         >
             <div className="max-w-2xl">
                 <h1 className="text-[40px] leading-[1.3] font-bold sm:text-[60px]">
